@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+  php-server:
+    image: php:8.0-apache
+    ports:
+      - 8080:80
+    volumes:
+      - ./source:/var/www/html
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_DATABASE: "test"
+      MYSQL_ROOT_HOST: "%"
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--default-authentication-plugin=mysql_native_password",
+      ]
+    ports:
+      - 33068:3306
+    volumes:
+      - php_db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8081:80
+    environment:
+      - PMA_ARBITRARY=1
+
+volumes:
+  php_db:
